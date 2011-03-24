@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Untitled Document</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://code.angularjs.org/angular-0.9.13.min.js" ng:autobind></script>
+		<script type="text/javascript">
+			function MyListController(){
+				
+			}
+			MyListController.prototype = {
+				toDolist: [
+					{
+						title: "Do³adowaæ telefon",
+						description: "Pójœæ do salonu ery i kupiæ do³adowanie za 50z³"
+					},
+					{
+						title: "Oddaæ ksi¿ki",
+						description: "na 17 pojechaæ do Aœki z ksi¹¿k¹ i komiksami"
+					},
+					{
+						title: "Przrobiæ rozdzia³ z GTD",
+						description: "W koñcu przeczytaæ rozdzia³ z GTD dotycz¹cy gromadzenia zadañ"
+					},
+				],
+				
+				vtest: 10,
+				
+				addTask: function(task){
+					angular.Array.add(this.toDolist,task);
+				}
+			}
+			
+			function NewTaskController(){
+				
+			}
+			NewTaskController.prototype = {
+				addTask: function(listname){
+					
+					var list=$("#"+listname).scope().$get('toDolist')
+					angular.Array.add(list,{title: this.title,description: this.desc})
+					this.clear();
+				},
+				
+				clear: function(){
+					this.title="";
+					this.desc="";
+				}
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div>
+		<div ng:controller="NewTaskController" id="newTaskController">
+			<label>Title</label><input type="text" name="title"><br>
+			<label>Description</label><textarea cols="10" rows="5" name="desc"></textarea><br>
+			<button ng:click="addTask('tlist')">add</button>
+		</div>
+		<div ng:controller="MyListController" id="tlist">
+			<ul ng:repeat="zadanie in toDolist"><li><b>{{zadanie.title}}</b><br>{{zadanie.description}}</li></ul>
+		</div>
+		</div>
+	</body>
+</html>
