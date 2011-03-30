@@ -9,11 +9,7 @@
         </script>
         <script type="text/javascript">
             function MyListController(){
-            
-            }
-            
-            MyListController.prototype = {
-                toDolist: [{
+				this.toDolist=[{
                     title: "Task1",
                     description: "Description of task 1"
                 }, {
@@ -22,10 +18,10 @@
                 }, {
                     title: "Task2",
                     description: "Description of task 2"
-                }, ],
-                
-                vtest: 10,
-                
+                }, ];
+            }
+            
+            MyListController.prototype = {
                 addTask: function(task){
                     angular.Array.add(this.toDolist, task);
                 },
@@ -112,9 +108,9 @@
         </script>
     </head>
     <body>
-    	<button onclick="eb.listen('creator1');eb.listen('creator2'); eb.subscribe('newTaskEvent','tlist','addNewTaskEventListener')">activate eb</button>
+    	<button onclick="eb.listen('creator1');eb.listen('creator2'); eb.subscribe('newTaskEvent','tlist','addNewTaskEventListener'); eb.subscribe('newTaskEvent','tlist2','addNewTaskEventListener')">activate eb</button>
         <div>
-            <div ng:controller="NewTaskController" id="creator1">
+            <div ng:controller="NewTaskController" id="creator1" style="float: left;">
                 <label>
                     Title
                 </label>
@@ -147,6 +143,15 @@
                 </button>
             </div>
             <div ng:controller="MyListController" id="tlist">
+                <ul ng:repeat="zadanie in toDolist">
+                    <li>
+                        <b>{{zadanie.title}}</b>
+                        <br>
+                        {{zadanie.description}}
+                    </li>
+                </ul>
+            </div>
+			<div ng:controller="MyListController" id="tlist2">
                 <ul ng:repeat="zadanie in toDolist">
                     <li>
                         <b>{{zadanie.title}}</b>
