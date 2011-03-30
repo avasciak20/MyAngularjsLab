@@ -46,12 +46,42 @@
 						angular.Array.add(taskList, {title: currentScope.$get('title'),description: currentScope.$get('desc')});						
 					});
             });
-            
+			
+			function EventBus(){
+			}
+			
+			EventBus.prototype = {
+				listen: function(elementId){
+					var element=$("#" + elementId);
+					
+					var dispatchFunction=element.scope().$get('dispatch')
+					if(!dispatchFunction){
+						alert("adding dispatch method");
+						
+						element.scope().$set('listeners', []);
+						angular.Array.add(element.scope().$get('listeners'),this);
+						
+						element.scope().$set('dispatch', function(message){
+							for (var i = this.listeners.length - 1; i >= 0; i--){
+								var listener=this.listeners[i];
+								listener.dispatch(message);
+							};
+						});
+						alert("method added");
+					}
+				},
+				dispatch: function(message){
+					alert("Dispatch: "+message);
+				}
+			}
+			
+			var eb=new EventBus();
         </script>
     </head>
     <body>
+    	<button onclick="eb.listen('creator1')">activate eb</button>
         <div>
-            <div ng:controller="NewTaskController">
+            <div ng:controller="NewTaskController" id="creator1">
                 <label>
                     Title
                 </label>
@@ -66,6 +96,7 @@
                 <button av:addtaskto="tlist">
                     add
                 </button>
+				<button ng:click="this.dispatch('hello world')">dispatch</button>
             </div>
 			<div ng:controller="NewTaskController">
                 <label>
