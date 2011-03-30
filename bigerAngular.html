@@ -28,7 +28,11 @@
                 
                 addTask: function(task){
                     angular.Array.add(this.toDolist, task);
-                }
+                },
+				
+				addNewTaskEventListener: function(event){
+					angular.Array.add(this.toDolist, {title: event.title, description: event.description});
+				}
             }
             
             function NewTaskController(){
@@ -36,6 +40,9 @@
             }
             
             NewTaskController.prototype = {
+				createNewTask: function(){
+					this.dispatch(new NewTaskEvent(this.title, this.desc));
+				}
             }
             
             angular.directive('av:addtaskto', function(elementId, el){
@@ -56,30 +63,51 @@
 					
 					var dispatchFunction=element.scope().$get('dispatch')
 					if(!dispatchFunction){
-						alert("adding dispatch method");
-						
 						element.scope().$set('listeners', []);
 						angular.Array.add(element.scope().$get('listeners'),this);
 						
-						element.scope().$set('dispatch', function(message){
+						element.scope().$set('dispatch', function(event){
 							for (var i = this.listeners.length - 1; i >= 0; i--){
 								var listener=this.listeners[i];
-								listener.dispatch(message);
+								listener.dispatch(event);
 							};
 						});
-						alert("method added");
 					}
 				},
-				dispatch: function(message){
-					alert("Dispatch: "+message);
+				
+				subscribe: function(eventName, elementId, listeningFunction){
+					this.subscribers[eventName]={elementId: elementId, listeningFunction: listeningFunction};
+				},
+				
+				subscribers: {},
+				
+				dispatch: function(event){
+					var eventName=event.eventName;
+					
+					for(var subscribersEventName in this.subscribers){
+						
+						if(subscribersEventName==eventName){
+							var subscriberInfo=this.subscribers[subscribersEventName];
+							
+							var listeningFunction=$("#" + subscriberInfo.elementId).scope().$get(subscriberInfo.listeningFunction);
+							
+							listeningFunction(event);
+						}
+					}
 				}
+			}
+			
+			function NewTaskEvent(title, description){
+				this.eventName="newTaskEvent";
+				this.title=title;
+				this.description=description;
 			}
 			
 			var eb=new EventBus();
         </script>
     </head>
     <body>
-    	<button onclick="eb.listen('creator1')">activate eb</button>
+    	<button onclick="eb.listen('creator1');eb.listen('creator2'); eb.subscribe('newTaskEvent','tlist','addNewTaskEventListener')">activate eb</button>
         <div>
             <div ng:controller="NewTaskController" id="creator1">
                 <label>
@@ -93,12 +121,11 @@
                 <textarea cols="10" rows="5" name="desc">
                 </textarea>
                 <br>
-                <button av:addtaskto="tlist">
+                <button ng:click="createNewTask()">
                     add
                 </button>
-				<button ng:click="this.dispatch('hello world')">dispatch</button>
             </div>
-			<div ng:controller="NewTaskController">
+			<div ng:controller="NewTaskController" id="creator2">
                 <label>
                     Title
                 </label>
@@ -110,7 +137,7 @@
                 <textarea cols="10" rows="5" name="desc">
                 </textarea>
                 <br>
-                <button av:addtaskto="tlist">
+                <button ng:click="createNewTask()">
                     add
                 </button>
             </div>
