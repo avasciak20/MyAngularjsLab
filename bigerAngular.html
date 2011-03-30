@@ -76,7 +76,10 @@
 				},
 				
 				subscribe: function(eventName, elementId, listeningFunction){
-					this.subscribers[eventName]={elementId: elementId, listeningFunction: listeningFunction};
+					if(!this.subscribers[eventName]){
+						this.subscribers[eventName]=new Array();
+					}
+					angular.Array.add(this.subscribers[eventName],{elementId: elementId, listeningFunction: listeningFunction})
 				},
 				
 				subscribers: {},
@@ -87,11 +90,13 @@
 					for(var subscribersEventName in this.subscribers){
 						
 						if(subscribersEventName==eventName){
-							var subscriberInfo=this.subscribers[subscribersEventName];
+							var subscribersArray=this.subscribers[subscribersEventName];
 							
-							var listeningFunction=$("#" + subscriberInfo.elementId).scope().$get(subscriberInfo.listeningFunction);
-							
-							listeningFunction(event);
+							for (var i = subscribersArray.length - 1; i >= 0; i--){
+								var subscriberInfo=subscribersArray[i];
+								var listeningFunction=$("#" + subscriberInfo.elementId).scope().$get(subscriberInfo.listeningFunction);
+								listeningFunction(event);
+							};
 						}
 					}
 				}
