@@ -8,41 +8,58 @@
         <script type="text/javascript" src="http://code.angularjs.org/angular-0.9.13.min.js" ng:autobind>
         </script>
         <script type="text/javascript">
-        	angular.widget('lz:hello',function(compileElement){
-				var children=compileElement.children();
-				var l=children.length
-				alert("hello");
-				for(var q=0;q<l;q++){
-					var child=children[q];
-					angular.compile(child);
-				}
-				return function(linkElement){
-					alert("hello - linkfunction ")
-				};
-			});
+        	//code copied from angular.js
+			function nodeName_(element){
+                    return element.nodeName ? element.nodeName : element[0].nodeName;
+                };
 			
-			angular.widget('lz:link',function(compileElement){
-				alert(compileElement.text());
-				return function(linkElement){
-					alert("link - link function");
-				};
-			});
-        
+            angular.widget('lz:hello', function(compileElement){
+                var compiler = this; //?
+                eachNode(compileElement, function(caseElement, index){
+					var q=1;
+                    alert("" + index + ": " + caseElement[0].tagName)
+                });
+            });
+            
+			//code copied from angular.js
+            function eachNode(element, fn){
+                var i, chldNodes = element[0].childNodes || [], chld;
+                for (i = 0; i < chldNodes.length; i++) {
+                    if (!isTextNode(chld = chldNodes[i])) {
+                        fn($(chld), i);
+                    }
+                }
+            }
+            
+			//code copied from angular.js
+            function isTextNode(node){
+                return nodeName_(node) == '#text';
+            }
+            
+            
         </script>
     </head>
     <body>
-    	Hello
-		<div>
-		<lz:hello>
-			<lz:link>link1</lz:link>
-			<lz:link>link2</lz:link>
-		</lz:hello>
-		</div>
-		<div>
-		<lz:hello>
-			<lz:link>link3</lz:link>
-			<lz:link>link4</lz:link>
-		</lz:hello>
-		</div>
+        Hello
+        <div>
+            <lz:hello>
+                <lz:link>
+                    link1
+                </lz:link>
+                <lz:link>
+                    link2
+                </lz:link>
+            </lz:hello>
+        </div>
+        <div>
+            <lz:hello>
+                <lz:link>
+                    link3
+                </lz:link>
+                <lz:link>
+                    link4
+                </lz:link>
+            </lz:hello>
+        </div>
     </body>
 </html>
