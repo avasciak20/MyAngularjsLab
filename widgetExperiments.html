@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <title>Untitled Document</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
+        </script>
+        <script type="text/javascript" src="http://code.angularjs.org/angular-0.9.13.min.js" ng:autobind>
+        </script>
+        <script type="text/javascript">
+        	angular.widget('lz:hello',function(compileElement){
+				var children=compileElement.children();
+				var l=children.length
+				alert("hello");
+				for(var q=0;q<l;q++){
+					var child=children[q];
+					angular.compile(child);
+				}
+				return function(linkElement){
+					alert("hello - linkfunction ")
+				};
+			});
+			
+			angular.widget('lz:link',function(compileElement){
+				alert(compileElement.text());
+				return function(linkElement){
+					alert("link - link function");
+				};
+			});
+        
+        </script>
+    </head>
+    <body>
+    	Hello
+		<div>
+		<lz:hello>
+			<lz:link>link1</lz:link>
+			<lz:link>link2</lz:link>
+		</lz:hello>
+		</div>
+		<div>
+		<lz:hello>
+			<lz:link>link3</lz:link>
+			<lz:link>link4</lz:link>
+		</lz:hello>
+		</div>
+    </body>
+</html>

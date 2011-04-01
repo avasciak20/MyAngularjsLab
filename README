@@ -2,7 +2,10 @@ Project for experiments with javascript, angularjs, jquery and some other javasc
 
 Don't treat this project as something that work :P
 
-bigerAngular.html 
-Very simple web page containing two elements controled by angularjs (ng:controller). 
-List of tasks and form to adding new tasks to this list.
-I try to understand how to provide simple way to communicate between elements.
+bigerAngular.html
+Webpage width for elements using angular controller. Components comunicate using simple
+event bus. Two publishers and two subscribers. 
+
+widgetExperiments.html
+Experiment with angular widgets. Creating, compiling function and linking. There is one parent
+elemnt with two children.  
