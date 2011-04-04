@@ -8,17 +8,26 @@
         <script type="text/javascript" src="http://code.angularjs.org/angular-0.9.13.min.js" ng:autobind>
         </script>
         <script type="text/javascript">
-        	//code copied from angular.js
-			function nodeName_(element){
-                    return element.nodeName ? element.nodeName : element[0].nodeName;
-                };
-			
+        	
             angular.widget('lz:hello', function(compileElement){
                 var compiler = this; //?
                 eachNode(compileElement, function(caseElement, index){
 					var q=1;
-                    alert("" + index + ": " + caseElement[0].tagName)
+					var lin=$(caseElement[0]);
+					lin.attr('eventBusId','ebid');
+					compiler.compile(lin);
                 });
+				
+				return function(linkElement){
+					alert("lz:hello: - linking")
+				};
+            });
+			
+			angular.widget('lz:link', function(compileElement){
+                alert("link compilation");
+				return function(linkElement){
+					alert('lz:link: - linking')
+				};
             });
             
 			//code copied from angular.js
@@ -36,6 +45,10 @@
                 return nodeName_(node) == '#text';
             }
             
+        	//code copied from angular.js
+			function nodeName_(element){
+                    return element.nodeName ? element.nodeName : element[0].nodeName;
+            };
             
         </script>
     </head>
